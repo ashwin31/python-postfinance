@@ -17,6 +17,7 @@ setup(name='postfinance',
             "iso4217"
       ],
       tests_require=[
+            "coveralls",
             "pytest",
             "pytest-cov",
             "pytest-mock",
