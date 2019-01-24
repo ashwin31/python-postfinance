@@ -1,6 +1,8 @@
 # PostFinance Python Library
 
-[![CircleCI](https://circleci.com/gh/niespodd/python-postfinance/tree/master.svg?style=svg)](https://circleci.com/gh/niespodd/python-postfinance/tree/master)
+[![TravisCI](https://travis-ci.org/niespodd/python-postfinance.svg?branch=master)](https://travis-ci.org/niespodd/python-postfinance.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/niespodd/python-postfinance/badge.svg?branch=master)](https://coveralls.io/github/niespodd/python-postfinance?branch=master)
+
 
 The PostFinance Python library provides an API for creating payment forms and payment validation according to PostFinance PSP integration guide.
 
