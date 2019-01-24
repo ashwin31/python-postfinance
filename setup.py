@@ -8,7 +8,20 @@ setup(name='postfinance',
       author='Dariusz Niespodziany',
       author_email='d.niespodziany@gmail.com',
       license='MIT',
-      tests_require=["pytest", "pytest-cov", "pytest-pep8", "pytest-mock", "mock"],
+      classifiers=[
+            "Intended Audience :: Financial and Insurance Industry",
+            "License :: OSI Approved :: MIT License",
+            "Topic :: Software Development :: Libraries :: Python Modules"
+      ],
+      install_requires=[
+            "iso4217"
+      ],
+      tests_require=[
+            "pytest",
+            "pytest-cov",
+            "pytest-mock",
+            "mock"
+      ],
       setup_requires=["pytest-runner"],
       packages=find_packages(),
       zip_safe=False)

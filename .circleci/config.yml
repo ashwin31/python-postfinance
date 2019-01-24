@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: python setup.py test
+      - run:
+          name: ping coveralls
+          command: "pip install coveralls &&
+                    coverage run --source=postfinance setup.py test &&
+                    coveralls"
+

@@ -1,5 +1,7 @@
 # PostFinance Python Library
 
+[![CircleCI](https://circleci.com/gh/niespodd/python-postfinance/tree/master.svg?style=svg)](https://circleci.com/gh/niespodd/python-postfinance/tree/master)
+
 The PostFinance Python library provides an API for creating payment forms and payment validation according to PostFinance PSP integration guide.
 
 ## How to use it?
