@@ -2,6 +2,15 @@
 https://e-payment-postfinance.v-psp.com/~/media/kdb/integration%20guides/sha-in_params.ashx?la=en
 """
 
+import re
+
+
+def _create_re(field: str):
+    return re.compile("^({})$".format(
+        field.replace("*XX*", ")(.*")
+    ), re.IGNORECASE)
+
+
 SHA_IN_ALLOWED_FIELDS = """ACCEPTANCE
 ACCEPTURL
 ADDMATCH
@@ -324,4 +333,10 @@ WBTU_ORDERID
 WEIGHTUNIT
 WIN3DS
 WITHROOT
-XDL""".split("\n")
+XDL"""
+
+
+SHA_IN_ALLOWED_FIELDS_RE = re.compile("^({})$".format(
+    ")|(".join(SHA_IN_ALLOWED_FIELDS.replace("*XX*", "([A-Za-z0-9]+)").split("\n"))
+))
+

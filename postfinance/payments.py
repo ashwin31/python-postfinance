@@ -3,6 +3,9 @@ from decimal import Decimal
 
 from iso4217 import Currency
 
+from .constants import (
+    SHA_IN_ALLOWED_FIELDS_RE,
+)
 from .utils import dict_to_ordered_qs
 from .config import PostFinanceConfig
 from .exceptions import (
@@ -22,7 +25,7 @@ class PostFinancePayments(object):
             **self._config.extra_config,
             **extra_config,
             "ORDERID": order_id,
-            "PSP_ID": self._config.psp_id,
+            "PSPID": self._config.psp_id,
             "AMOUNT": self._amount_to_int(amount, currency),
             "CURRENCY": currency,
         }
@@ -31,6 +34,7 @@ class PostFinancePayments(object):
         return form_fields
 
     def _sign_fields(self, fields_dict: dict) -> str:
+        fields_dict = {k: v for k, v in fields_dict.items() if SHA_IN_ALLOWED_FIELDS_RE.match(k)}
         fields_str = dict_to_ordered_qs(fields_dict, self._config.sha_password).encode('utf-8')
         return self._config.sha_method(fields_str).hexdigest()
 

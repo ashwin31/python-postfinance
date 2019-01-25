@@ -59,10 +59,10 @@ class PaymentsSigningTestCase(TestCase):
 
     def test_payment_signature_alternative_alg(self):
         test_algos = (
-            (sha1, "9cace149459a28c56b578a96eea7dd5e227d3c81"),
-            (sha256, "4b85896aa526906d51a13e59435782ff24beaaef0dd403ac8a4b0573889e882a"),
-            (sha512, "380737af181bda5cbd63529b837d7acb06443a2d07cc987c8f57293257617098"
-                     "518be5adc707337b430940917c37307d218ea5dadcb155dd91ab7c1450742a2a"),
+            (sha1, "6ad88229a6d229b1a69a1200ebaa3aaf66a5fb9b"),
+            (sha256, "e31c867a1835c1a3658532f15ca10511a70686c66ae56ad40883bea01ce0a2a4"),
+            (sha512, "14d017e0f78f944793d206c4a30f7703c011cd610242648b0acc3a6c0dfd5804"
+                     "a45a93b24d67d73f444b6f10fa06b1715bfa8445c1f048f624e27653cd94bb4d"),
         )
 
         for sig_method, sig_exp_out in test_algos:
@@ -71,8 +71,16 @@ class PaymentsSigningTestCase(TestCase):
 
             self.assertEqual(payment.get("SHASIGN"), sig_exp_out)
 
+    def test_payment_signature_doesnt_include_unallowed_fields(self):
+        builder = self._get_builder(sha1)
+        p_1 = builder.create("order1", "15", "CHF")
+        p_2 = builder.create("order1", "15", "CHF", extra_config={"RANDOM": "FIELD"})
+
+        self.assertEqual(p_1.get("SHASIGN"), p_2.get("SHASIGN"))
+        self.assertEqual(p_2.get("RANDOM"), "FIELD")
+
     @staticmethod
     def _get_builder(sig_method):
-        _config = PostFinanceConfig(psp_id="AAA", sha_password="BBB", sha_method=sig_method)
+        _config = PostFinanceConfig(psp_id="AAA", sha_password="_", sha_method=sig_method)
         return PostFinancePayments(_config)
 
