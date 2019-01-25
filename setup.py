@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='postfinance',
-      version='0.1',
+      version='0.1.1',
       python_requires='>=3.6',
       description='PostFinance PSP library',
       url='http://github.com/niespodd/postfinance',
