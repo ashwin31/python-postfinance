@@ -4,13 +4,6 @@ https://e-payment-postfinance.v-psp.com/~/media/kdb/integration%20guides/sha-in_
 
 import re
 
-
-def _create_re(field: str):
-    return re.compile("^({})$".format(
-        field.replace("*XX*", ")(.*")
-    ), re.IGNORECASE)
-
-
 SHA_IN_ALLOWED_FIELDS = """ACCEPTANCE
 ACCEPTURL
 ADDMATCH

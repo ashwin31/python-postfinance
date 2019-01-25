@@ -11,8 +11,8 @@ class Environment(Enum):
 
 
 ENV_URLS = {
-    Environment.PROD: "https://e-payment.postfinance.ch/ncol/test/orderstandard_utf8.asp",
-    Environment.TEST: "https://e-payment.postfinance.ch/ncol/prod/orderstandard_utf8.asp"
+    Environment.TEST: "https://e-payment.postfinance.ch/ncol/test/orderstandard_utf8.asp",
+    Environment.PROD: "https://e-payment.postfinance.ch/ncol/prod/orderstandard_utf8.asp"
 }
 
 
