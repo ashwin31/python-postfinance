@@ -10,7 +10,7 @@ class PostFinance(object):
         _kwargs.update({"psp_id": psp_id, "sha_password": sha_password, "language": default_lang or "en_US"})
         if env:
             env_url = Environment.get_env_url(env)
-            _kwargs.update({"env": "env", "url": env_url})
+            _kwargs.update({"env": env, "url": env_url})
 
         self._base_config = PostFinanceConfig(**_kwargs)
         self.payments = PostFinancePayments(self._base_config)
