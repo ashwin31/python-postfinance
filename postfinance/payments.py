@@ -3,8 +3,11 @@ from decimal import Decimal
 
 from iso4217 import Currency
 
-from postfinance.utils import dict_to_ordered_qs
+from .utils import dict_to_ordered_qs
 from .config import PostFinanceConfig
+from .exceptions import (
+    PaymentAmountInvalidException,
+)
 
 
 class PostFinancePayments(object):
@@ -37,7 +40,8 @@ class PostFinancePayments(object):
             iso_currency = Currency(currency.upper())
             amount_flt = Decimal(amount.replace(",", "."))
             amount_flt = amount_flt * pow(10, iso_currency.exponent)
-            assert amount_flt % 1 == 0, "The provided amount has too many decimal places."
+            if amount_flt % 1 > 0:
+                raise PaymentAmountInvalidException("The provided amount has too many decimal places.")
             return int(amount_flt)
         except ValueError:
             logging.warning("`{}` currency has not been recognized. Make sure the provided value is correct.".format(currency))

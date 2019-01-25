@@ -8,6 +8,7 @@ from hashlib import (
 from postfinance.config import (
     PostFinanceConfig,
 )
+from postfinance.exceptions import PaymentAmountInvalidException
 from postfinance.payments import PostFinancePayments
 
 
@@ -37,6 +38,10 @@ class PaymentsTestCase(TestCase):
         self._builder.create("test_order", "5", "INEXISTS")
 
         self.assertTrue(mock.called)
+
+    def test_throws_when_amount_decimals_mismatch(self):
+        with self.assertRaises(PaymentAmountInvalidException):
+            self._builder.create("test_order", "5.1234567890", "USD")
 
     def test_supply_extra_config_to_payment(self):
         payment = self._builder.create("test_order", "15", "EUR", {
@@ -70,3 +75,4 @@ class PaymentsSigningTestCase(TestCase):
     def _get_builder(sig_method):
         _config = PostFinanceConfig(psp_id="AAA", sha_password="BBB", sha_method=sig_method)
         return PostFinancePayments(_config)
+
