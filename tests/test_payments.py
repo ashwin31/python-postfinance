@@ -20,18 +20,18 @@ class PaymentsTestCase(TestCase):
     def test_values_correctly_formatted(self):
         payment = self._builder.create("test_order", "12.5", "pln")
 
-        assert payment.get("CURRENCY") == "PLN"
-        assert payment.get("AMOUNT") == 1250
+        assert payment.form_data.get("CURRENCY") == "PLN"
+        assert payment.form_data.get("AMOUNT") == 1250
 
     def test_amount_converts_to_nonfloating_int(self):
         payment = self._builder.create("test_order", "1234.56", "EUR")
 
-        self.assertEqual(payment.get("AMOUNT"), 123456)
+        self.assertEqual(payment.form_data.get("AMOUNT"), 123456)
 
     def test_amount_various_formats(self):
         for _format in ["1234.56", "1234,56"]:
             payment = self._builder.create("test_order", _format, "EUR")
-            assert payment.get("AMOUNT") == int(123456)
+            assert payment.form_data.get("AMOUNT") == int(123456)
 
     @patch('logging.warning')
     def test_warn_about_invalid_currency(self, mock):
@@ -48,14 +48,14 @@ class PaymentsTestCase(TestCase):
             "title": "That was a payment!"
         })
 
-        self.assertEqual(payment.get("TITLE"), "That was a payment!")
+        self.assertEqual(payment.form_data.get("TITLE"), "That was a payment!")
 
 
 class PaymentsSigningTestCase(TestCase):
     def test_payment_has_signature(self):
         payment = self._get_builder(sha1).create("test_order", "15", "PLN")
 
-        self.assertIn("SHASIGN", payment)
+        self.assertIn("SHASIGN", payment.form_data)
 
     def test_payment_signature_alternative_alg(self):
         test_algos = (
@@ -69,15 +69,15 @@ class PaymentsSigningTestCase(TestCase):
             builder = self._get_builder(sig_method)
             payment = builder.create("test_order", "15", "PLN")
 
-            self.assertEqual(payment.get("SHASIGN"), sig_exp_out)
+            self.assertEqual(payment.form_data.get("SHASIGN"), sig_exp_out)
 
     def test_payment_signature_doesnt_include_unallowed_fields(self):
         builder = self._get_builder(sha1)
         p_1 = builder.create("order1", "15", "CHF")
         p_2 = builder.create("order1", "15", "CHF", extra_config={"RANDOM": "FIELD"})
 
-        self.assertEqual(p_1.get("SHASIGN"), p_2.get("SHASIGN"))
-        self.assertEqual(p_2.get("RANDOM"), "FIELD")
+        self.assertEqual(p_1.form_data.get("SHASIGN"), p_2.form_data.get("SHASIGN"))
+        self.assertEqual(p_2.form_data.get("RANDOM"), "FIELD")
 
     @staticmethod
     def _get_builder(sig_method):

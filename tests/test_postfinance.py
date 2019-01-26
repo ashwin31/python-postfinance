@@ -18,7 +18,7 @@ class PostFinanceTestCase(TestCase):
 
         payment = client.payments.create("test_order", "15", "CHF")
 
-        self.assertEqual(payment.get("TITLE"), "A Shop Payments")
+        self.assertEqual(payment.form_data.get("TITLE"), "A Shop Payments")
 
     def test_url_updates_for_non_test_env(self):
         client = PostFinance(psp_id="A", sha_password="B", env=Environment.PROD)
