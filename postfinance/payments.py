@@ -1,5 +1,6 @@
 import logging
 from decimal import Decimal
+from typing import NamedTuple
 
 from iso4217 import Currency
 
@@ -13,11 +14,16 @@ from .exceptions import (
 )
 
 
+class PostFinancePayment(NamedTuple):
+    form_data: dict
+    url: str
+
+
 class PostFinancePayments(object):
     def __init__(self, config: PostFinanceConfig):
         self._config = config
 
-    def create(self, order_id: str, amount: str, currency: str, extra_config: dict = None) -> dict:
+    def create(self, order_id: str, amount: str, currency: str, extra_config: dict = None) -> PostFinancePayment:
         currency = currency.upper()
         extra_config = {k.upper(): v for k, v in extra_config.items()} if extra_config else {}
         form_fields = {
@@ -31,7 +37,7 @@ class PostFinancePayments(object):
         }
         sha_sign = self._sign_fields(form_fields)
         form_fields.update({"SHASIGN": sha_sign})
-        return form_fields
+        return PostFinancePayment(form_data=form_fields, url=self._config.url)
 
     def _sign_fields(self, fields_dict: dict) -> str:
         fields_dict = {k: v for k, v in fields_dict.items() if SHA_IN_ALLOWED_FIELDS_RE.match(k)}
