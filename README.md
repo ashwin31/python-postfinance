@@ -8,28 +8,35 @@
 
 The PostFinance Python library provides an API for creating payment forms and payment validation according to PostFinance PSP integration guide.
 
+*NOTE: This project is not a officially supported by PostFinance or any affiliated organisation*
+
+
+**Installation:**
+
 `pip install postfinance`
 
+## Integration
+This library can be used with popular frameworks like Flask or Django. For more information please refer to
+[integration guide](INTEGRATION.md).
+
 ## Features
-* Facilitates creating payment forms by generating form dictionary and field validation (handle `ITEM*xx*` sorting, allowed fields)
-* Generates `SHASIGN` according to integration guide (supports `sha1`, `sha256`, `sha512`)
+* Natual currency formatting, i.e. `12.00CHF`, `5CHF`, `12.99CHF` - no decimal conversion headache
+* Payment form signing including order preservation for `ITEM*XX*` fields and filtering against [SHA-IN allowed parameters list](postfinance/constants/sha_in.py)
+* Support for incoming transaction data validation `SHA-OUT`
 
-## How to use it?
-
-The example below uses test environment to create a payment form data.
-
+## Example use
 ```python
->>> from postfinance import PostFinance, Environment
->>> client = PostFinance(psp_id="clientDEMO", env=Environment.TEST, sha_password="SuperSecret123?!")
->>> client.payments.create("", "12.99", "CHF")
-{'LANGUAGE': 'en_US', 'ORDERID': '', 'PSP_ID': 'clientDEMO', 'AMOUNT': 1299, 'CURRENCY': 'CHF', 'SHASIGN': '199acacbaef8417424eeea998e84366cf81c475e'}
+>>> from postfinance import PostFinance
+>>> from postfinance.constants Environment
+>>> client = PostFinance(psp_id="clientDEMO", env=Environment.PROD, sha_password="SuperSecret123?!")
+>>> payment = client.payments.create("", "12.99", "CHF")
+>>> payment.url
+'https://e-payment.postfinance.ch/ncol/prod/orderstandard_utf8.asp'
+>>> payment.form_data
+{'LANGUAGE': 'en_US',
+ 'ORDERID': 'order-1',
+ 'PSPID': 'clientDEMO',
+ 'AMOUNT': 1299,
+ 'CURRENCY': 'CHF',
+ 'SHASIGN': '29ad8a6946bbca5fcb82197f4dff1145d413ec72'}
 ```
-
-# Using with Django
-tbd
-
-
-## TODO
-* Validate form against [postfinance/constants/sha_in.py](postfinance/constants/sha_in.py) allowed fields
-* Create Django form helper
-* Add `PostFinance.validator` for sha-out validation
